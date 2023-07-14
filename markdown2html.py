@@ -1,11 +1,14 @@
-#!/usr/bin/python3
+#!/usr/bin/python
+
 """
 A script that converts Markdown to HTML.
 """
 
+from __future__ import print_function  # Needed for Python 2 compatibility
 import sys
 import os
 import re
+
 
 def convert_markdown_to_html(input_file, output_file):
     """
@@ -13,11 +16,11 @@ def convert_markdown_to_html(input_file, output_file):
     """
     # Check that the Markdown file exists and is a file
     if not (os.path.exists(input_file) and os.path.isfile(input_file)):
-        print(f"Missing {input_file}", file=sys.stderr)
+        print("Missing {}".format(input_file), file=sys.stderr)
         sys.exit(1)
 
     # Read the Markdown file and convert it to HTML
-    with open(input_file, encoding="utf-8") as f:
+    with open(input_file, "r") as f:
         html_lines = []
         for line in f:
             # Check for Markdown headings
@@ -25,13 +28,14 @@ def convert_markdown_to_html(input_file, output_file):
             if match:
                 heading_level = len(match.group(1))
                 heading_text = match.group(2)
-                html_lines.append(f"<h{heading_level}>{heading_text}</h{heading_level}>")
+                html_lines.append("<h{}>{}</h{}>".format(heading_level, heading_text, heading_level))
             else:
                 html_lines.append(line.rstrip())
 
     # Write the HTML output to a file
-    with open(output_file, "w", encoding="utf-8") as f:
+    with open(output_file, "w") as f:
         f.write("\n".join(html_lines))
+
 
 if __name__ == "__main__":
     # Check that the correct number of arguments were provided
